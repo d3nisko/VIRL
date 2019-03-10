@@ -7,7 +7,7 @@
         <extensions>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
             <entry key="config" type="String">!
-! Last configuration change at 23:35:49 UTC Sat Mar 9 2019
+! Last configuration change at 22:42:08 UTC Sun Mar 10 2019
 !
 version 16.9
 service timestamps debug datetime msec
@@ -141,6 +141,40 @@ interface GigabitEthernet2
  no mop enabled
  no mop sysid
 !
+!
+router eigrp EIGRP
+ !
+ address-family ipv4 unicast autonomous-system 101
+  !
+  af-interface Loopback0
+   passive-interface
+  exit-af-interface
+  !
+  af-interface GigabitEthernet2
+   authentication mode hmac-sha-256 7 079D9DAC
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 192.168.0.0 0.0.255.255
+  eigrp stub connected summary
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 101
+  !
+  af-interface Loopback0
+   passive-interface
+  exit-af-interface
+  !
+  af-interface GigabitEthernet2
+   authentication mode hmac-sha-256 7 128BB9F7
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  eigrp stub connected summary
+ exit-address-family
+!
 ip forward-protocol nd
 ip http server
 ip http authentication local
@@ -183,7 +217,7 @@ end
         <extensions>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
             <entry key="config" type="String">!
-! Last configuration change at 00:07:03 UTC Sun Mar 10 2019
+! Last configuration change at 22:41:59 UTC Sun Mar 10 2019
 !
 version 16.9
 service timestamps debug datetime msec
@@ -299,6 +333,8 @@ interface Loopback0
  description Loopback
  ip address 192.168.2.1 255.255.255.0
  ipv6 address 2001:DB8:ACAD:B::1/64
+ ospfv3 1 ipv4 area 1
+ ospfv3 1 ipv6 area 1
 !
 interface GigabitEthernet1
  description OOB Management
@@ -323,12 +359,58 @@ interface GigabitEthernet3
  ip address 192.168.9.5 255.255.255.252
  negotiation auto
  ipv6 address 2001:DB8:ACAD:91::1/64
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
  no mop enabled
  no mop sysid
+!
+!
+router eigrp EIGRP
+ !
+ address-family ipv4 unicast autonomous-system 101
+  !
+  af-interface GigabitEthernet2
+   authentication mode hmac-sha-256 7 1397ABF2
+  exit-af-interface
+  !
+  topology base
+   distribute-list REDIST-TO-R1 out GigabitEthernet2
+   redistribute ospfv3 1 metric 128 0 255 1 1500
+  exit-af-topology
+  network 192.168.9.0 0.0.0.3
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 101
+  !
+  af-interface Loopback0
+   shutdown
+  exit-af-interface
+  !
+  af-interface GigabitEthernet3
+   shutdown
+  exit-af-interface
+  !
+  af-interface GigabitEthernet2
+   authentication mode hmac-sha-256 7 0599BAEF
+  exit-af-interface
+  !
+  topology base
+   redistribute ospf 1 metric 128 0 255 1 1500
+  exit-af-topology
+ exit-address-family
 !
 router ospfv3 1
  !
  address-family ipv4 unicast
+  redistribute eigrp 101 metric-type 1
+  passive-interface Loopback0
+  router-id 2.2.2.2
+  area 1 stub no-summary
+  area 1 range 192.168.2.0 255.255.255.0
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  redistribute eigrp 101 metric-type 1
   router-id 2.2.2.2
  exit-address-family
 !
@@ -339,6 +421,10 @@ ip http secure-server
 !
 ip ssh server algorithm authentication password
 !
+!
+ip access-list standard REDIST-TO-R1
+ deny   192.168.3.0 0.0.0.255
+ permit any
 !
 !
 !
@@ -375,7 +461,7 @@ end
         <extensions>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
             <entry key="config" type="String">!
-! Last configuration change at 00:06:57 UTC Sun Mar 10 2019
+! Last configuration change at 22:17:06 UTC Sun Mar 10 2019
 !
 version 16.9
 service timestamps debug datetime msec
@@ -491,6 +577,8 @@ interface Loopback0
  description Loopback
  ip address 192.168.3.1 255.255.255.0
  ipv6 address 2001:DB8:ACAD:C::1/64
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
 !
 interface GigabitEthernet1
  description OOB Management
@@ -506,6 +594,8 @@ interface GigabitEthernet2
  ip address 192.168.9.6 255.255.255.252
  negotiation auto
  ipv6 address 2001:DB8:ACAD:91::2/64
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
  no mop enabled
  no mop sysid
 !
@@ -524,6 +614,19 @@ interface GigabitEthernet4
  ipv6 address 2001:DB8:FEED:1::2/64
  no mop enabled
  no mop sysid
+!
+router ospfv3 1
+ !
+ address-family ipv4 unicast
+  passive-interface Loopback0
+  default-information originate always
+  router-id 3.3.3.3
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  default-information originate always
+  router-id 3.3.3.3
+ exit-address-family
 !
 ip forward-protocol nd
 ip http server
