@@ -461,7 +461,7 @@ end
         <extensions>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
             <entry key="config" type="String">!
-! Last configuration change at 22:17:06 UTC Sun Mar 10 2019
+! Last configuration change at 22:16:12 UTC Mon Mar 11 2019
 !
 version 16.9
 service timestamps debug datetime msec
@@ -628,6 +628,32 @@ router ospfv3 1
   router-id 3.3.3.3
  exit-address-family
 !
+router bgp 65101
+ bgp router-id 3.3.3.3
+ bgp log-neighbor-changes
+ neighbor 2001:DB8:FEED:1::1 remote-as 65401
+ neighbor 2001:DB8:FEED:2::1 remote-as 65401
+ neighbor 172.16.1.1 remote-as 65401
+ neighbor 172.16.2.1 remote-as 65401
+ !
+ address-family ipv4
+  network 192.168.3.0
+  no neighbor 2001:DB8:FEED:1::1 activate
+  no neighbor 2001:DB8:FEED:2::1 activate
+  neighbor 172.16.1.1 activate
+  neighbor 172.16.1.1 weight 100
+  neighbor 172.16.2.1 activate
+  neighbor 172.16.2.1 weight 50
+ exit-address-family
+ !
+ address-family ipv6
+  network 2001:DB8:ACAD:C::/64
+  neighbor 2001:DB8:FEED:1::1 activate
+  neighbor 2001:DB8:FEED:1::1 weight 100
+  neighbor 2001:DB8:FEED:2::1 activate
+  neighbor 2001:DB8:FEED:2::1 weight 50
+ exit-address-family
+!
 ip forward-protocol nd
 ip http server
 ip http authentication local
@@ -672,7 +698,7 @@ end
         <extensions>
             <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
             <entry key="config" type="String">!
-! Last configuration change at 00:02:26 UTC Sun Mar 10 2019
+! Last configuration change at 22:13:40 UTC Mon Mar 11 2019
 !
 version 16.9
 service timestamps debug datetime msec
@@ -812,6 +838,32 @@ interface GigabitEthernet3
  ipv6 address 2001:DB8:FEED:1::1/64
  no mop enabled
  no mop sysid
+!
+router bgp 65401
+ bgp router-id 4.4.4.4
+ bgp log-neighbor-changes
+ neighbor 2001:DB8:FEED:1::2 remote-as 65101
+ neighbor 2001:DB8:FEED:2::2 remote-as 65101
+ neighbor 172.16.1.2 remote-as 65101
+ neighbor 172.16.2.2 remote-as 65101
+ !
+ address-family ipv4
+  network 172.16.4.0 mask 255.255.255.0
+  no neighbor 2001:DB8:FEED:1::2 activate
+  no neighbor 2001:DB8:FEED:2::2 activate
+  neighbor 172.16.1.2 activate
+  neighbor 172.16.1.2 weight 100
+  neighbor 172.16.2.2 activate
+  neighbor 172.16.2.2 weight 50
+ exit-address-family
+ !
+ address-family ipv6
+  network 2001:DB8:CAFE:4::/64
+  neighbor 2001:DB8:FEED:1::2 activate
+  neighbor 2001:DB8:FEED:1::2 weight 100
+  neighbor 2001:DB8:FEED:2::2 activate
+  neighbor 2001:DB8:FEED:2::2 weight 50
+ exit-address-family
 !
 ip forward-protocol nd
 ip http server
