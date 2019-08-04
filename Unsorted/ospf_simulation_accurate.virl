@@ -1,0 +1,1402 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<topology xmlns="http://www.cisco.com/VIRL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.95" xsi:schemaLocation="http://www.cisco.com/VIRL https://raw.github.com/CiscoVIRL/schema/v0.95/virl.xsd">
+    <extensions>
+        <entry key="AutoNetkit.enable_routing" type="Boolean">true</entry>
+        <entry key="AutoNetkit.IGP" type="String">ospf</entry>
+    </extensions>
+    <node name="csr1000v-1" type="SIMPLE" subtype="CSR1000v" location="400,156" ipv4="192.168.0.1">
+        <extensions>
+            <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
+            <entry key="AutoNetkit.ibgp_role" type="String">Disabled</entry>
+            <entry key="config" type="String">!
+! Last configuration change at 08:16:50 UTC Mon Jul 22 2019 by cisco
+!
+version 16.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname csr1000v-1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name virl.info
+ip admission watch-list expiry-time 0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+ipv6 unicast-routing
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3758748176
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3758748176
+ revocation-check none
+ rsakeypair TP-self-signed-3758748176
+!
+!
+crypto pki certificate chain TP-self-signed-3758748176
+ certificate self-signed 01 nvram:IOS-Self-Sig#1.cer
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 9W2KCSQC9IW
+license accept end user agreement
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+username cisco privilege 15 secret 5 $1$NmE8$22/lNcRpwx1L/tZhW8PMV.
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 192.168.0.1 255.255.255.255
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.10 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to csr1000v-5
+ ip address 10.0.0.9 255.255.255.252
+ ip ospf cost 1
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description to csr1000v-3
+ ip address 10.0.128.1 255.255.255.252
+ ip ospf cost 1
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ description to csr1000v-4
+ ip address 10.0.128.5 255.255.255.252
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router ospf 1
+ area 1 nssa no-summary
+ passive-interface Loopback0
+ network 10.0.0.8 0.0.0.3 area 0
+ network 10.0.128.0 0.0.0.3 area 1
+ network 10.0.128.4 0.0.0.3 area 1
+ network 192.168.0.1 0.0.0.0 area 0
+!
+router bgp 1
+ bgp router-id 192.168.0.1
+ bgp log-neighbor-changes
+ !
+ address-family ipv4
+  network 192.168.0.1 mask 255.255.255.255
+ exit-address-family
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+ip ssh server algorithm authentication password
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+line con 0
+ password cisco
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end
+
+</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2" ipv4="10.0.0.9" netPrefixLenV4="30"/>
+        <interface id="1" name="GigabitEthernet3" ipv4="10.0.128.1" netPrefixLenV4="30"/>
+        <interface id="2" name="GigabitEthernet4" ipv4="10.0.128.5" netPrefixLenV4="30"/>
+    </node>
+    <node name="csr1000v-2" type="SIMPLE" subtype="CSR1000v" location="749,147" ipv4="192.168.0.2">
+        <extensions>
+            <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
+            <entry key="AutoNetkit.ibgp_role" type="String">Disabled</entry>
+            <entry key="config" type="String">!
+! Last configuration change at 08:14:54 UTC Mon Jul 22 2019 by cisco
+!
+version 16.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname csr1000v-2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name virl.info
+ip admission watch-list expiry-time 0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+ipv6 unicast-routing
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-79890805
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-79890805
+ revocation-check none
+ rsakeypair TP-self-signed-79890805
+!
+!
+crypto pki certificate chain TP-self-signed-79890805
+ certificate self-signed 01 nvram:IOS-Self-Sig#1.cer
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 9BUCC93XVI7
+license accept end user agreement
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+username cisco privilege 15 secret 5 $1$iwZZ$tev8DPdH4JNbMbKbgMQP81
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 192.168.0.2 255.255.255.255
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.11 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to csr1000v-5
+ ip address 10.0.128.13 255.255.255.252
+ ip ospf cost 1
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description to csr1000v-3
+ ip address 10.0.0.13 255.255.255.252
+ ip ospf cost 1
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ description to csr1000v-4
+ ip address 10.0.128.9 255.255.255.252
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router ospf 1
+ area 1 nssa no-summary
+ passive-interface Loopback0
+ network 10.0.0.12 0.0.0.3 area 1
+ network 10.0.128.8 0.0.0.3 area 1
+ network 10.0.128.12 0.0.0.3 area 0
+ network 192.168.0.2 0.0.0.0 area 0
+!
+router bgp 1
+ bgp router-id 192.168.0.2
+ bgp log-neighbor-changes
+ !
+ address-family ipv4
+  network 192.168.0.2 mask 255.255.255.255
+ exit-address-family
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+ip ssh server algorithm authentication password
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+line con 0
+ password cisco
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end
+
+</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2" ipv4="10.0.128.13" netPrefixLenV4="30"/>
+        <interface id="1" name="GigabitEthernet3" ipv4="10.0.0.13" netPrefixLenV4="30"/>
+        <interface id="2" name="GigabitEthernet4" ipv4="10.0.128.9" netPrefixLenV4="30"/>
+    </node>
+    <node name="csr1000v-3" type="SIMPLE" subtype="CSR1000v" location="485,391" ipv4="192.168.0.3">
+        <extensions>
+            <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
+            <entry key="AutoNetkit.ibgp_role" type="String">Disabled</entry>
+            <entry key="config" type="String">!
+! Last configuration change at 11:01:05 UTC Mon Jul 22 2019
+!
+version 16.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname csr1000v-3
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name virl.info
+ip admission watch-list expiry-time 0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+ipv6 unicast-routing
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-2044756047
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2044756047
+ revocation-check none
+ rsakeypair TP-self-signed-2044756047
+!
+!
+crypto pki certificate chain TP-self-signed-2044756047
+ certificate self-signed 01 nvram:IOS-Self-Sig#1.cer
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 9B3AJ458DQZ
+license accept end user agreement
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+username cisco privilege 15 secret 5 $1$Kkxa$TwWfVIcl3qxfTOfXpXNJ9/
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 192.168.0.3 255.255.255.255
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.12 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to csr1000v-1
+ ip address 10.0.128.2 255.255.255.252
+ ip ospf cost 1
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description to csr1000v-2
+ ip address 10.0.0.14 255.255.255.252
+ ip ospf cost 1
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ description to iosvl2-1
+ ip address 10.0.0.1 255.255.255.248
+ standby 1 ip 10.0.0.6
+ standby 1 timers msec 200 msec 750
+ standby 1 priority 150
+ standby 1 preempt delay minimum 450
+ standby 1 authentication HD2w6Fdc
+ ip ospf cost 1
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router ospf 1
+ area 1 nssa
+ redistribute static metric-type 1 subnets
+ passive-interface Loopback0
+ network 10.0.0.0 0.0.0.7 area 1
+ network 10.0.0.12 0.0.0.3 area 1
+ network 10.0.128.0 0.0.0.3 area 1
+ network 192.168.0.3 0.0.0.0 area 1
+!
+router bgp 1
+ bgp router-id 192.168.0.3
+ bgp log-neighbor-changes
+ !
+ address-family ipv4
+  network 192.168.0.3 mask 255.255.255.255
+ exit-address-family
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip route 192.168.0.6 255.255.255.255 10.0.0.3
+!
+ip ssh server algorithm authentication password
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+line con 0
+ password cisco
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end
+
+</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2" ipv4="10.0.128.2" netPrefixLenV4="30"/>
+        <interface id="1" name="GigabitEthernet3" ipv4="10.0.0.14" netPrefixLenV4="30"/>
+        <interface id="2" name="GigabitEthernet4" ipv4="10.0.0.1" netPrefixLenV4="29"/>
+    </node>
+    <node name="csr1000v-5" type="SIMPLE" subtype="CSR1000v" location="576,24" ipv4="192.168.0.5">
+        <extensions>
+            <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
+            <entry key="AutoNetkit.ibgp_role" type="String">Disabled</entry>
+            <entry key="config" type="String">!
+! Last configuration change at 21:31:21 UTC Sun Jul 21 2019 by cisco
+!
+version 16.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname csr1000v-5
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name virl.info
+ip admission watch-list expiry-time 0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+ipv6 unicast-routing
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-1824089368
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1824089368
+ revocation-check none
+ rsakeypair TP-self-signed-1824089368
+!
+!
+crypto pki certificate chain TP-self-signed-1824089368
+ certificate self-signed 01 nvram:IOS-Self-Sig#1.cer
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 98PR8TYU153
+license accept end user agreement
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+username cisco privilege 15 secret 5 $1$7vxd$zxKYyhpIoF8999rPnu9zu.
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 192.168.0.5 255.255.255.255
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.14 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to csr1000v-1
+ ip address 10.0.0.10 255.255.255.252
+ ip ospf cost 1
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description to csr1000v-2
+ ip address 10.0.128.14 255.255.255.252
+ ip ospf cost 1
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router ospf 1
+ passive-interface Loopback0
+ network 10.0.0.8 0.0.0.3 area 0
+ network 10.0.128.12 0.0.0.3 area 0
+ network 192.168.0.5 0.0.0.0 area 0
+!
+router bgp 1
+ bgp router-id 192.168.0.5
+ bgp log-neighbor-changes
+ !
+ address-family ipv4
+  network 192.168.0.5 mask 255.255.255.255
+ exit-address-family
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+ip ssh server algorithm authentication password
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+line con 0
+ password cisco
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end
+
+</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2" ipv4="10.0.0.10" netPrefixLenV4="30"/>
+        <interface id="1" name="GigabitEthernet3" ipv4="10.0.128.14" netPrefixLenV4="30"/>
+    </node>
+    <node name="csr1000v-4" type="SIMPLE" subtype="CSR1000v" location="703,399" ipv4="192.168.0.4">
+        <extensions>
+            <entry key="AutoNetkit.ibgp_role" type="String">Disabled</entry>
+            <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
+            <entry key="config" type="String">!
+! Last configuration change at 13:32:53 UTC Mon Jul 22 2019 by cisco
+!
+version 16.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname csr1000v-4
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name virl.info
+ip admission watch-list expiry-time 0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+ipv6 unicast-routing
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3347838276
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3347838276
+ revocation-check none
+ rsakeypair TP-self-signed-3347838276
+!
+!
+crypto pki certificate chain TP-self-signed-3347838276
+ certificate self-signed 01 nvram:IOS-Self-Sig#1.cer
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 9CLJQ62SE6C
+license accept end user agreement
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+username cisco privilege 15 secret 5 $1$Ehtx$SgKv1p2Ajq6ylDbZTRGeZ/
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 192.168.0.4 255.255.255.255
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.13 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to csr1000v-1
+ ip address 10.0.128.6 255.255.255.252
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description to csr1000v-2
+ ip address 10.0.128.10 255.255.255.252
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ description to iosvl2-1
+ ip address 10.0.0.2 255.255.255.248
+ standby 1 ip 10.0.0.6
+ standby 1 timers msec 200 msec 750
+ standby 1 priority 120
+ standby 1 preempt
+ standby 1 authentication HD2w6Fdc
+ ip ospf cost 1
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router ospf 1
+ area 1 nssa no-summary
+ redistribute static metric-type 1 subnets
+ passive-interface Loopback0
+ network 10.0.0.0 0.0.0.7 area 1
+ network 10.0.128.4 0.0.0.3 area 1
+ network 10.0.128.8 0.0.0.3 area 1
+ network 192.168.0.4 0.0.0.0 area 1
+!
+router bgp 1
+ bgp router-id 192.168.0.4
+ bgp log-neighbor-changes
+ !
+ address-family ipv4
+  network 192.168.0.4 mask 255.255.255.255
+ exit-address-family
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip route 192.168.0.6 255.255.255.255 10.0.0.3
+!
+ip ssh server algorithm authentication password
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+line con 0
+ password cisco
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end
+
+</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2" ipv4="10.0.128.6" netPrefixLenV4="30"/>
+        <interface id="1" name="GigabitEthernet3" ipv4="10.0.128.10" netPrefixLenV4="30"/>
+        <interface id="2" name="GigabitEthernet4" ipv4="10.0.0.2" netPrefixLenV4="29"/>
+    </node>
+    <node name="iosvl2-1" type="SIMPLE" subtype="IOSvL2" location="597,550">
+        <extensions>
+            <entry key="AutoNetkit.ibgp_role" type="String">Disabled</entry>
+            <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
+            <entry key="config" type="String">!
+! Last configuration change at 20:33:49 UTC Sun Jul 21 2019
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname iosvl2-1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable password cisco
+!
+username cisco privilege 15 secret 5 $1$d3fE$FXaz3dOHr3O0JyCXHbLBk1
+no aaa new-model
+!
+!
+!
+!
+!
+vtp domain virl.lab
+vtp mode transparent
+!
+!
+!
+no ip domain-lookup
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+vlan 2
+ name ank_vlan2
+no cdp run
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ description Loopback
+ no ip address
+!
+interface GigabitEthernet0/0
+ description OOB management
+ no switchport
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.16 255.255.0.0
+ negotiation auto
+!
+interface GigabitEthernet0/1
+ description to csr1000v-3
+ switchport access vlan 2
+ switchport mode access
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ description to csr1000v-4
+ switchport access vlan 2
+ switchport mode access
+ negotiation auto
+!
+interface GigabitEthernet0/3
+ description to csr1000v-6
+ switchport access vlan 2
+ switchport mode access
+ negotiation auto
+!
+ip forward-protocol nd
+!
+no ip http server
+!
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+!
+!
+!
+!
+control-plane
+!
+banner exec `
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************`
+banner incoming `
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************`
+banner login `
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************`
+!
+line con 0
+ password cisco
+line aux 0
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+end
+
+</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet0/1"/>
+        <interface id="1" name="GigabitEthernet0/2"/>
+        <interface id="2" name="GigabitEthernet0/3"/>
+    </node>
+    <node name="csr1000v-6" type="SIMPLE" subtype="CSR1000v" location="600,685" ipv4="192.168.0.6">
+        <extensions>
+            <entry key="AutoNetkit.ibgp_role" type="String">Disabled</entry>
+            <entry key="AutoNetkit.mgmt_ip" type="string"></entry>
+            <entry key="config" type="String">!
+! Last configuration change at 21:12:08 UTC Sun Jul 21 2019 by cisco
+!
+version 16.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname csr1000v-6
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name virl.info
+ip admission watch-list expiry-time 0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+ipv6 unicast-routing
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3377167703
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3377167703
+ revocation-check none
+ rsakeypair TP-self-signed-3377167703
+!
+!
+crypto pki certificate chain TP-self-signed-3377167703
+ certificate self-signed 01 nvram:IOS-Self-Sig#1.cer
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 99PHGFWPE9D
+license accept end user agreement
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+username cisco privilege 15 secret 5 $1$53EF$D061COmSAzmStahAr/qnA0
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 192.168.0.6 255.255.255.255
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.15 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to iosvl2-1
+ ip address 10.0.0.3 255.255.255.248
+ ip ospf cost 1
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router bgp 1
+ bgp router-id 192.168.0.6
+ bgp log-neighbor-changes
+ !
+ address-family ipv4
+  network 192.168.0.6 mask 255.255.255.255
+ exit-address-family
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip route 0.0.0.0 0.0.0.0 10.0.0.6
+!
+ip ssh server algorithm authentication password
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+line con 0
+ password cisco
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end
+
+</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2" ipv4="10.0.0.3" netPrefixLenV4="29"/>
+    </node>
+    <annotations/>
+    <connection dst="/virl:topology/virl:node[1]/virl:interface[1]" src="/virl:topology/virl:node[4]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[2]/virl:interface[1]" src="/virl:topology/virl:node[4]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[3]/virl:interface[1]" src="/virl:topology/virl:node[1]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[3]/virl:interface[2]" src="/virl:topology/virl:node[2]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[5]/virl:interface[1]" src="/virl:topology/virl:node[1]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[5]/virl:interface[2]" src="/virl:topology/virl:node[2]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[6]/virl:interface[1]" src="/virl:topology/virl:node[3]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[6]/virl:interface[2]" src="/virl:topology/virl:node[5]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[7]/virl:interface[1]" src="/virl:topology/virl:node[6]/virl:interface[3]"/>
+</topology>
